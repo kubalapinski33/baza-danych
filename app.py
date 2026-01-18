@@ -64,7 +64,10 @@ with col1:
     
     if produkty:
         for p in produkty:
-            with st.expander(f"{p['nazwa']} ({p['kategorie']['nazwa']})"):
+            # BEZPIECZNIK: Sprawdzamy czy relacja 'kategorie' istnieje
+            nazwa_kat = p['kategorie']['nazwa'] if p.get('kategorie') else "Brak kategorii"
+            
+            with st.expander(f"{p['nazwa']} ({nazwa_kat})"):
                 st.write(f"Ilość: {p['liczba']} | Cena: {p['cena']} zł")
                 if st.button(f"Usuń {p['nazwa']}", key=f"del_{p['id']}"):
                     supabase.table("produkty").delete().eq("id", p['id']).execute()
